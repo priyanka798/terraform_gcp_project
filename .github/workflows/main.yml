@@ -1,4 +1,4 @@
-name: Manage Google Cloud Bucket
+name: Deploy GCP Bucket
 
 on:
   push:
@@ -6,25 +6,33 @@ on:
       - main
 
 jobs:
-  manage-bucket:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Authenticate to Google Cloud
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0
+
+    - name: Authenticate to GCP
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-    - name: Set up Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
+    - name: Setup gcloud CLI
+      uses: google-github-actions/setup-gcloud@v1
       with:
-        version: 'latest'
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
 
-    - name: Create Google Cloud Storage Bucket
-      run: |
-        gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -l us-central1 gs://$BUCKET_NAME/
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
       env:
-        BUCKET_NAME: your-bucket-name
+        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
