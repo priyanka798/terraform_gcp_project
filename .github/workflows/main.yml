@@ -1,4 +1,4 @@
-name: Python CI
+name: Run Python Script
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  run-script:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +22,12 @@ jobs:
       run: |
         pip install google-cloud-storage
 
-    - name: Run script
+    - name: Set up Google Cloud credentials
       run: |
-        python .github/workflows/main.py  # Update with the correct path
+        echo "${{ secrets.GCP_CREDENTIALS }}" > $HOME/gcp-key.json
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcp-key.json
+
+    - name: Run Python script
+      run: |
+        python .github/workflows/main.py
