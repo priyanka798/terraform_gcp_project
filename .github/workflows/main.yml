@@ -31,3 +31,5 @@ jobs:
     - name: Run Python script
       run: |
         python .github/workflows/main.py
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcp-key.json
