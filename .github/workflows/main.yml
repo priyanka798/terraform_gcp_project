@@ -25,8 +25,20 @@ jobs:
     - name: Set up Google Cloud credentials
       run: |
         echo "${{ secrets.GCP_CREDENTIALS }}" > $HOME/gcp-key.json
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcp-key.json
+
+    - name: List files in home directory
+      run: ls -la $HOME
+
+    - name: Debug Python Path and Environment
+      run: |
+        echo "Python Path:"
+        which python
+        echo "Python Version:"
+        python --version
+        echo "GOOGLE_APPLICATION_CREDENTIALS:"
+        echo $GOOGLE_APPLICATION_CREDENTIALS
+        echo "File Content:"
+        cat $HOME/gcp-key.json
 
     - name: Run Python script
       run: |
