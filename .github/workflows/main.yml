@@ -24,6 +24,6 @@ jobs:
 
     - name: Run script
       run: |
-        python C:\Users\priya\terraform_gcp_project\scripts\create_bucket.py  # Update with the correct path
+        python C:\Users\priya\terraform_gcp_project\polar-office-422517-t9-25b3de4ef764.json  # Update with the correct path
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
